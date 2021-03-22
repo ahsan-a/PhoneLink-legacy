@@ -12,7 +12,7 @@ Send links to your computer from your phone, or from any device in your local ne
 
 ## Usage
 
-With the  shortcu, when you share a link, an option should appear in your share sheet saying "*Open link on computer*". Once clicked, the link should appear on your computer's browser.
+With the  shortcut, when you share a link, an option should appear in your share sheet saying "*Open link on computer*". Once clicked, the link should appear on your computer's browser.
 
 Alternatively, you can make an http request, using `curl`, `fetch`, or just your browser. I would not reccommend this and i would recommend making an android-alternative  to shortcuts, makng a script, etc. The request should look like this:
 ``
