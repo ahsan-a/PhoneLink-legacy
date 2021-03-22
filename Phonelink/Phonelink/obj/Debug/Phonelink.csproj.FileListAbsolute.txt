@@ -1,0 +1,16 @@
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\bin\Debug\Phonelink.exe.config
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\bin\Debug\Phonelink.exe
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\bin\Debug\Phonelink.pdb
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\obj\Debug\Phonelink.csprojAssemblyReference.cache
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\obj\Debug\Phonelink.Form1.resources
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\obj\Debug\Phonelink.Properties.Resources.resources
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\obj\Debug\Phonelink.csproj.GenerateResource.cache
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\obj\Debug\Phonelink.csproj.CoreCompileInputs.cache
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\obj\Debug\Phonelink.exe
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\obj\Debug\Phonelink.pdb
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\bin\Debug\MimeTypesMap.dll
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\bin\Debug\Newtonsoft.Json.dll
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\bin\Debug\SimpleHTTP.dll
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\bin\Debug\Newtonsoft.Json.xml
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\bin\Debug\SimpleHTTP.xml
+D:\Users\Ahsan\Documents\Programming\C#\PhoneLink\Phonelink\Phonelink\obj\Debug\Phonelink.csproj.CopyComplete

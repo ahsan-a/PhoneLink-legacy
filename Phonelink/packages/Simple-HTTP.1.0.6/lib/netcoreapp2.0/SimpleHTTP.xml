@@ -1,0 +1,415 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SimpleHTTP</name>
+    </assembly>
+    <members>
+        <member name="T:SimpleHttp.RequestExtensions">
+            <summary>
+            Class containing <see cref="T:System.Net.HttpListenerRequest"/> extensions.
+            </summary>
+        </member>
+        <member name="M:SimpleHttp.RequestExtensions.ParseBody(System.Net.HttpListenerRequest,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Parses body of the request including form and multi-part form data.
+            </summary>
+            <param name="request">HTTP request.</param>
+            <param name="args">Key-value pairs populated by the form data by this function.</param>
+            <returns>Name-file pair collection.</returns>
+        </member>
+        <member name="M:SimpleHttp.RequestExtensions.ParseBody(System.Net.HttpListenerRequest,System.Collections.Generic.Dictionary{System.String,System.String},SimpleHttp.OnFile)">
+            <summary>
+            Parses body of the request including form and multi-part form data.
+            </summary>
+            <param name="request">HTTP request.</param>
+            <param name="args">Key-value pairs populated by the form data by this function.</param>
+            <param name="onFile">
+            Function called if a file is about to be parsed. The stream is attached to a corresponding <see cref="T:SimpleHttp.HttpFile"/>.
+            <para>By default, <see cref="T:System.IO.MemoryStream"/> is used, but for large files, it is recommended to open <see cref="T:System.IO.FileStream"/> directly.</para>
+            </param>
+            <returns>Name-file pair collection.</returns>
+        </member>
+        <member name="T:SimpleHttp.OnFile">
+            <summary>
+            Delegate executed when a file is about to be read from a body stream.
+            </summary>
+            <param name="fieldName">Field name.</param>
+            <param name="fileName">name of the file.</param>
+            <param name="contentType">Content type.</param>
+            <returns>Stream to be populated.</returns>
+        </member>
+        <member name="T:SimpleHttp.HttpFile">
+            <summary>
+            HTTP file data container.
+            </summary>
+        </member>
+        <member name="M:SimpleHttp.HttpFile.#ctor(System.String,System.IO.Stream,System.String)">
+            <summary>
+            Creates new HTTP file data container.
+            </summary>
+            <param name="fileName">File name.</param>
+            <param name="value">Data.</param>
+            <param name="contentType">Content type.</param>
+        </member>
+        <member name="P:SimpleHttp.HttpFile.FileName">
+            <summary>
+            Gets the name of the file.
+            </summary>
+        </member>
+        <member name="P:SimpleHttp.HttpFile.Value">
+            <summary>
+            Gets the data.
+            <para>If a stream is created <see cref="T:SimpleHttp.OnFile"/> it will be closed when this HttpFile object is disposed.</para>
+            </summary>
+        </member>
+        <member name="P:SimpleHttp.HttpFile.ContentType">
+            <summary>
+            Content type.
+            </summary>
+        </member>
+        <member name="M:SimpleHttp.HttpFile.Save(System.String,System.Boolean)">
+            <summary>
+            Saves the data into a file.
+            <para>Directory path will be auto created if does not exists.</para>
+            </summary>
+            <param name="fileName">File path with name.</param>
+            <param name="overwrite">True to overwrite the existing file, false otherwise.</param>
+            <returns>True if the file is saved/overwritten, false otherwise.</returns>
+        </member>
+        <member name="M:SimpleHttp.HttpFile.Dispose">
+            <summary>
+            Disposes the current instance.
+            </summary>
+        </member>
+        <member name="M:SimpleHttp.HttpFile.Finalize">
+            <summary>
+            Disposes the current instance.
+            </summary>
+        </member>
+        <member name="T:SimpleHttp.ResponseExtensions">
+            <summary>
+            Class containing HTTP response extensions.
+            </summary>
+        </member>
+        <member name="M:SimpleHttp.ResponseExtensions.WithCORS(System.Net.HttpListenerResponse)">
+            <summary>
+            Sets response headers to enable CORS.
+            </summary>
+            <param name="response">HTTP response.</param>
+            <returns>Modified HTTP response.</returns>
+        </member>
+        <member name="M:SimpleHttp.ResponseExtensions.WithContentType(System.Net.HttpListenerResponse,System.String)">
+            <summary>
+            Sets the content-type for the response.
+            </summary>
+            <param name="response">HTTP response.</param>
+            <param name="contentType">HTTP content-type.</param>
+            <returns>Modified HTTP response.</returns>
+        </member>
+        <member name="M:SimpleHttp.ResponseExtensions.WithHeader(System.Net.HttpListenerResponse,System.String,System.String)">
+            <summary>
+            Sets the specified header for the response.
+            </summary>
+            <param name="response">HTTP response.</param>
+            <param name="name">Header name.</param>
+            <param name="value">Header value.</param>
+            <returns>Modified HTTP response.</returns>
+        </member>
+        <member name="M:SimpleHttp.ResponseExtensions.WithCode(System.Net.HttpListenerResponse,System.Net.HttpStatusCode)">
+            <summary>
+            Sets the status code for the response.
+            </summary>
+            <param name="response">HTTP response.</param>
+            <param name="statusCode">HTTP status code.</param>
+            <returns>Modified HTTP response.</returns>
+        </member>
+        <member name="M:SimpleHttp.ResponseExtensions.WithCookie(System.Net.HttpListenerResponse,System.String,System.String)">
+            <summary>
+            Sets the cookie for the response.
+            </summary>
+            <param name="response">HTTP response.</param>
+            <param name="name">Cookie name.</param>
+            <param name="value">Cookie value.</param>
+            <returns>Modified HTTP response.</returns>
+        </member>
+        <member name="M:SimpleHttp.ResponseExtensions.WithCookie(System.Net.HttpListenerResponse,System.String,System.String,System.DateTime)">
+            <summary>
+            Sets the cookie for the response.
+            </summary>
+            <param name="response">HTTP response.</param>
+            <param name="name">Cookie name.</param>
+            <param name="value">Cookie value.</param>
+            <param name="expires">Cookie expiration date (UTC).</param>
+            <returns>Modified HTTP response.</returns>
+        </member>
+        <member name="M:SimpleHttp.ResponseExtensions.WithCookie(System.Net.HttpListenerResponse,System.Net.Cookie)">
+            <summary>
+            Sets the cookie for the response.
+            </summary>
+            <param name="response">HTTP response.</param>
+            <param name="cookie">Cookie.</param>
+            <returns>Modified HTTP response.</returns>
+        </member>
+        <member name="M:SimpleHttp.ResponseExtensions.AsText(System.Net.HttpListenerResponse,System.String,System.String)">
+            <summary>
+            Writes the specified data to the response.
+            <para>Response is closed and can not be longer modified.</para>
+            </summary>
+            <param name="response">HTTP response.</param>
+            <param name="txt">Text data to write.</param>
+            <param name="mime">Mime type.</param>
+        </member>
+        <member name="M:SimpleHttp.ResponseExtensions.AsRedirect(System.Net.HttpListenerResponse,System.String)">
+            <summary>
+            Builds a redirect response.
+            <para>Response is closed and can not be longer modified.</para>
+            </summary>
+            <param name="response">HTTP response.</param>
+            <param name="url">A new location (URL).</param>
+        </member>
+        <member name="M:SimpleHttp.ResponseExtensions.AsFile(System.Net.HttpListenerResponse,System.Net.HttpListenerRequest,System.String)">
+            <summary>
+            Writes the specified file content to the response.
+            <para>Response is closed and can not be longer modified.</para>
+            <para>Built-in support for 'byte-range' response, 'ETag' and 'Last-Modified'.</para>
+            </summary>
+            <param name="response">HTTP response.</param>
+            <param name="request">HTTP request used to determine 'Range' header</param>
+            <param name="fileName">File path with name.</param>
+        </member>
+        <member name="M:SimpleHttp.ResponseExtensions.AsBytes(System.Net.HttpListenerResponse,System.Net.HttpListenerRequest,System.Byte[],System.String)">
+            <summary>
+            Writes the specified data to the response.
+            <para>Response is closed and can not be longer modified.</para>
+            </summary>
+            <param name="response">HTTP response.</param>
+            <param name="request">HTTP request used to determine 'Range' header</param>
+            <param name="data">Data to write.</param>
+            <param name="mime">Mime type.</param>
+        </member>
+        <member name="M:SimpleHttp.ResponseExtensions.AsStream(System.Net.HttpListenerResponse,System.Net.HttpListenerRequest,System.IO.Stream,System.String)">
+            <summary>
+            Writes the specified data to the response.
+            <para>Response is closed and can not be longer modified.</para>
+            </summary>
+            <param name="response">HTTP response.</param>
+            <param name="request">HTTP request used to determine 'Range' header</param>
+            <param name="stream">
+            Data to write.
+            <para>Stream must support seek operation due to 'byte-range' functionality.</para>
+            </param>
+            <param name="mime">Mime type.</param>
+        </member>
+        <member name="T:SimpleHttp.StringExtensions">
+            <summary>
+            Class containing extensions for <see cref="T:System.String"/>.
+            </summary>
+        </member>
+        <member name="M:SimpleHttp.StringExtensions.TryMatch(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Matches all the expressions inside '{ }' defined in <paramref name="pattern"/> for the <paramref name="query"/> and populates the <paramref name="args"/>.
+            <para>Example: query: "Hello world", pattern: "{first} world" => args["first"] is "Hello".</para>
+            </summary>
+            <param name="query">Query string.</param>
+            <param name="pattern">Pattern string defining the expressions to match inside '{ }'.</param>
+            <param name="args">Key-value pair collection populated by <paramref name="pattern"/> keys and matches in <paramref name="query"/> if found.</param>
+            <returns>True is all defined keys in <paramref name="pattern"/> are matched, false otherwise.</returns>
+        </member>
+        <member name="T:SimpleHttp.OnBefore">
+            <summary>
+            Delegate which runs before all route-methods and returns if the processing should finish (true) or continue (false).
+            </summary>
+            <param name="request">HTTP request.</param>
+            <param name="response">HTTP response.</param>
+            <returns>True if the request is handled, false otherwise.</returns>
+        </member>
+        <member name="T:SimpleHttp.ShouldProcessFunc">
+            <summary>
+            Delegate which runs before any route-action is invoked to determine which route should be executed.
+            </summary>
+            <param name="request">HTTP request.</param>
+            <param name="arguments">
+            Empty collection of key-value pairs populated by this function. 
+            <para>If <see cref="T:SimpleHttp.OnBefore"/> is run it may contain some data.</para>
+            </param>
+            <returns>True if the route action should be executed, false otherwise.</returns>
+        </member>
+        <member name="T:SimpleHttp.HttpActionAsync">
+            <summary>
+            Delegate which runs when a route is matched.
+            </summary>
+            <param name="request">HTTP request.</param>
+            <param name="response">HTTP response.</param>
+            <param name="arguments">Collection of key-value pairs populated by the <see cref="T:SimpleHttp.ShouldProcessFunc"/>.</param>
+            <returns>Action task.</returns>
+        </member>
+        <member name="T:SimpleHttp.HttpAction">
+            <summary>
+            Delegate which runs when a route is matched.
+            </summary>
+            <param name="request">HTTP request.</param>
+            <param name="response">HTTP response.</param>
+            <param name="arguments">Collection of key-value pairs populated by the <see cref="T:SimpleHttp.ShouldProcessFunc"/>.</param>
+        </member>
+        <member name="T:SimpleHttp.OnError">
+            <summary>
+            Delegate which runs if an error occurs.
+            </summary>
+            <param name="request">HTTP request.</param>
+            <param name="response">HTTP response.</param>
+            <param name="exception">Thrown exception.</param>
+        </member>
+        <member name="T:SimpleHttp.RouteNotFoundException">
+            <summary>
+            Represents error that occur when a route is not found.
+            </summary>
+        </member>
+        <member name="M:SimpleHttp.RouteNotFoundException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the route not found exception.
+            </summary>
+            <param name="route"></param>
+        </member>
+        <member name="T:SimpleHttp.Route">
+            <summary>
+            Class defining all the required actions for route-processing and error handling.
+            /// </summary>
+        </member>
+        <member name="P:SimpleHttp.Route.Before">
+            <summary>
+            Action executed before all route-methods.
+            <para>It may be null.</para>
+            </summary>
+        </member>
+        <member name="P:SimpleHttp.Route.Error">
+            <summary>
+            Action executed if an error occurs.
+            <para>By default it outputs exception message as text with an existing status code. In case of 200-299, 'BadRequest' is used.</para>
+            </summary>
+        </member>
+        <member name="F:SimpleHttp.Route.Methods">
+            <summary>
+            Gets or sets the route methods.
+            </summary>
+        </member>
+        <member name="M:SimpleHttp.Route.OnHttpRequestAsync(System.Net.HttpListenerRequest,System.Net.HttpListenerResponse)">
+            <summary>
+            Entry function executed on the incoming HTTP request.
+            </summary>
+            <param name="request">HTTP request.</param>
+            <param name="response">HTTP response.</param>
+            <returns>Request processing task.</returns>
+        </member>
+        <member name="M:SimpleHttp.Route.Add(System.String,SimpleHttp.HttpAction,System.String)">
+            <summary>
+            Adds the specified action to the route collection.
+            <para>The order of actions defines the priority.</para>
+            </summary>
+            <param name="pattern">
+            String pattern optionally containing named arguments in {}. 
+            <para>
+            Example: "/page-{pageNumber}/". 'pageNumber' will be parsed and added to 'arguments' key-value pair collection.
+            The last argument is parsed as greedy one.
+            </para>
+            </param>
+            <param name="action">Action executed if the specified pattern matches the URL path.</param>
+            <param name="method">HTTP method (GET, POST, DELETE, HEAD).</param>
+        </member>
+        <member name="M:SimpleHttp.Route.Add(System.String,SimpleHttp.HttpActionAsync,System.String)">
+            <summary>
+            Adds the specified action to the route collection.
+            <para>The order of actions defines the priority.</para>
+            </summary>
+            <param name="pattern">
+            String pattern optionally containing named arguments in {}. 
+            <para>
+            Example: "/page-{pageNumber}/". 'pageNumber' will be parsed and added to 'arguments' key-value pair collection.
+            The last argument is parsed as greedy one.
+            </para>
+            </param>
+            <param name="action">Action executed if the specified pattern matches the URL path.</param>
+            <param name="method">HTTP method (GET, POST, DELETE, HEAD).</param>
+        </member>
+        <member name="M:SimpleHttp.Route.Add(SimpleHttp.ShouldProcessFunc,SimpleHttp.HttpActionAsync)">
+            <summary>
+            Adds the specified action to the route collection.
+            <para>The order of actions defines the priority.</para>
+            </summary>
+            <param name="shouldProcess">Function defining whether the specified action should be executed or not.</param>
+            <param name="action">Action executed if the specified pattern matches the URL path.</param>
+        </member>
+        <member name="M:SimpleHttp.Route.Add(SimpleHttp.ShouldProcessFunc,SimpleHttp.HttpAction)">
+            <summary>
+            Adds the specified action to the route collection.
+            <para>The order of actions defines the priority.</para>
+            </summary>
+            <param name="shouldProcess">Function defining whether the specified action should be executed or not.</param>
+            <param name="action">Action executed if the specified pattern matches the URL path.</param>
+        </member>
+        <member name="T:SimpleHttp.HttpServer">
+            <summary>
+            HTTP server listener class.
+            </summary>
+        </member>
+        <member name="M:SimpleHttp.HttpServer.ListenAsync(System.Int32,System.Threading.CancellationToken,System.Func{System.Net.HttpListenerRequest,System.Net.HttpListenerResponse,System.Threading.Tasks.Task},System.Boolean,System.Byte)">
+            <summary>
+            Creates and starts a new instance of the http(s) server.
+            </summary>
+            <param name="port">The http/https URI listening port.</param>
+            <param name="token">Cancellation token.</param>
+            <param name="onHttpRequestAsync">Action executed on HTTP request.</param>
+            <param name="useHttps">True to add 'https://' prefix insteaad of 'http://'.</param>
+            <param name="maxHttpConnectionCount">Maximum HTTP connection count, after which the incoming requests will wait (sockets are not included).</param>
+            <returns>Server listening task.</returns>
+        </member>
+        <member name="M:SimpleHttp.HttpServer.ListenAsync(System.String,System.Threading.CancellationToken,System.Func{System.Net.HttpListenerRequest,System.Net.HttpListenerResponse,System.Threading.Tasks.Task},System.Byte)">
+            <summary>
+            Creates and starts a new instance of the http(s) / websocket server.
+            </summary>
+            <param name="httpListenerPrefix">The http/https URI listening prefix.</param>
+            <param name="token">Cancellation token.</param>
+            <param name="onHttpRequestAsync">Action executed on HTTP request.</param>
+            <param name="maxHttpConnectionCount">Maximum HTTP connection count, after which the incoming requests will wait (sockets are not included).</param>
+            <returns>Server listening task.</returns>
+        </member>
+        <member name="T:SimpleHttp.Templating">
+            <summary>
+            Class defining methods for string or file pattern replacements.
+            </summary>
+        </member>
+        <member name="M:SimpleHttp.Templating.RenderFile(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Replaces all occurrences defined inside each {key} expression with values. Keys and values are specified in the replacements.
+            </summary>
+            <param name="fileName">File path with name.</param>
+            <param name="replacements">Key-value pair collection for replacements.</param>
+            <returns>Processed file content.</returns>
+        </member>
+        <member name="M:SimpleHttp.Templating.RenderString(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Replaces all occurrences defined inside each {key} expression with values. Keys and values are specified in the replacements.
+            </summary>
+            <param name="template">Template string.</param>
+            <param name="replacements">Key-value pair collection for replacements.</param>
+            <returns>Processed template.</returns>
+        </member>
+        <member name="M:SimpleHttp.Templating.RenderFile``1(System.String,``0)">
+            <summary>
+            Replaces all occurrences defined inside each {key} expression with values. Keys and values are defined as object property names and values.
+            </summary>
+            <typeparam name="T">Object type.</typeparam>
+            <param name="fileName">File path with name.</param>
+            <param name="obj">Object to use for replacements.</param>
+            <returns>Processed file content.</returns>
+        </member>
+        <member name="M:SimpleHttp.Templating.RenderString``1(System.String,``0)">
+            <summary>
+            Replaces all occurrences defined inside each {key} expression with values. Keys and values are defined as object property names and values.
+            </summary>
+            <typeparam name="T">Object type.</typeparam>
+            <param name="template">Template string.</param>
+            <param name="obj">Object to use for replacements.</param>
+            <returns>Processed file content.</returns>
+        </member>
+    </members>
+</doc>
