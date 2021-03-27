@@ -9,7 +9,7 @@ Send links to your computer from your phone, or from any device in your local ne
 3. inside of the `setup.ps1` file, set your port to whatever it is inside of your config. Save and run the script. It should prompt you to **run as an Administrator**.
 4. (Optional, but recommended) Right click the `Phonelink.exe` file and click `Create shortcut`. Rename this to whatever you like, and drag this inside of the `startup` folder. This folder is a shortcut to your startup folder, meaning the application will run at system startup.
 5. Run the executable.
-6. Download the [iOS Companion Shortcut](https://www.icloud.com/shortcuts/745a4ed5672e4160a01623864a84baee) and answer the questions you are prompted to, or edit the texts inside of the actual shortcut. (You can run the `ipconfig` command in powershell to find your ip address).
+6. Download the [iOS Companion Shortcut](https://www.icloud.com/shortcuts/19bfb332f6be4ffd8b5ebcbc55d15cfb) and answer the questions you are prompted to, or edit the texts inside of the actual shortcut. (You can run the `ipconfig` command in powershell to find your ip address).
 
 ## Usage
 
