@@ -367,3 +367,5 @@ FodyWeavers.xsd
 # End of https://www.toptal.com/developers/gitignore/api/csharp
 PhonelinkInstaller/
 PhoneLink/MigrationBackup/
+installer/
+*.iss

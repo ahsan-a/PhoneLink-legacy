@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 
@@ -45,16 +46,31 @@ namespace Phonelink
                 },
                 "POST");
 
+            Route.Add($"{baseUrl}notification", (req, res, args) =>
+                {
+                    SendNotification(req.Headers["title"], req.Headers["body"]);
+                    res.AsText($"sent a notification with the title as \"{req.Headers["title"]}\" and the content body as \"{req.Headers["body"]}\"");
+                });
+
+
             HttpServer.ListenAsync(
                 Convert.ToInt32(Config.AppSettings.Settings["port"].Value),
                 System.Threading.CancellationToken.None,
                 Route.OnHttpRequestAsync
             );
 
-            Console.WriteLine("server ready");
+            Console.WriteLine(baseUrl);
         }
 
-        private static void SendUpdateNotif()
+        private void SendNotification(string title, string body)
+        {
+            new ToastContentBuilder()
+                .AddText(title)
+                .AddText(body)
+                .Show();
+        }
+
+        private void SendUpdateNotif()
         {
             if (Convert.ToBoolean(Config.AppSettings.Settings["passwordEnabled"].Value))
             {
@@ -62,11 +78,8 @@ namespace Phonelink
                 var isUpdate = update.IsUpdateAvailable(ConfigurationManager.AppSettings.Get("currentVersion"), VersionChange.Minor);
                 if (isUpdate)
                 {
-                    new ToastContentBuilder()
-                        .AddText("PhoneLink Update Available")
-                        .AddText("Update to get the latest features. A new release is available on the Github repository. You can disable checking for releases in the PhoneLink menu.")
-                        .AddArgument("action", "openGithub")
-                        .Show();
+                    SendNotification("PhoneLink Update Available",
+                        "Update to get the latest features. A new release is available on the Github repository. You can disable checking for releases in the PhoneLink menu.");
                 }
             }
         }
@@ -95,7 +108,6 @@ namespace Phonelink
             //save files
             foreach (var f in files.Values)
             {
-                Directory.CreateDirectory(Config.AppSettings.Settings["currentSavePath"].Value);
                 try
                 {
                     using (var file = new FileStream(
