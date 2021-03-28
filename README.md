@@ -1,3 +1,4 @@
+
 # PhoneLink
 
 Send links to your computer from your phone, or from any device in your local network.
@@ -17,21 +18,24 @@ Answer the questions you are prompted to, or edit the texts inside of the actual
 When you share a link, an option should show in your share sheet called "Open link on computer". Once clicked, the link should appear on your computer's browser.
 When you share a file or image, an option in your share sheet should show called "Save File on Computer". Once clicked, the file should save wherever you specified.
 
-Alternatively, you can make an HTTP request, I would not reccommend this and i would recommend making an android-alternative to shortcuts, makng a script, etc.
+Alternatively, you can make an HTTP request, I would not reccommend this and i would recommend making an android-alternative to shortcuts, makng a script, etc. 
 
 ### Requests:
-
 -   URL: `http://(IP):(PORT)/(PASSWORD)/url/(URL_ADDRESS)`
 -   File/Image: `http://(IP):(PORT)/(PASSWORD)/file`. Your file(s) inside of a form-data body. The key can be anything and the value is your file. You can have multiple of these.
+
+| Request Type| Request URL Example |Description|
+|--------------------|-------------|-----------|
+|URL |`192.168.0.2:1234/1234/url/google.com`| A GET request to send a link to your computer. It doesn't need to begin with `http://` or `https://`.|
+|File| `192.168.0.2:1234/1234/file` | A POST request to save files on your computer. Your file(s) inside of a form-data body. The key can be anything and the value must be your file(s). You can have multiple of these. The save location is whatever specified inside of your settings.|
+| Notification |`192.168.0.2:1234/1234/notification`|A GET request to send a notification to your computer. Your content must be in the form of headers. Your headers are `title`, and `body`. |
 
 an example with a password of `1234`:
 `http://192.168.0.69:1234/1234/url/google.com`
 (use of http or https in the link isn't required.)
 
-If you run into any problems, contact me on discord, ahsan#4403, or make an issue.
+If you run into any problems, contact me on discord (ahsan#4403), or make an issue.
 
 ## Configuration
-
-~~You can configure the port and password in the `Phonelink.exe.config` file, and customise whether you'd like to check for updates and have a password in the right click context menu.~~
 
 A settings menu is now available by clicking on the PhoneLink icon in the system tray.
