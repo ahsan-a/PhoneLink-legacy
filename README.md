@@ -20,6 +20,10 @@ When you share a file or image, an option in your share sheet should show called
 
 Alternatively, you can make an HTTP request, I would not reccommend this and i would recommend making an android-alternative to shortcuts, makng a script, etc. 
 
+Requests look like this: `http://IP:PORT/PASSWORD/TYPE`
+
+and like this without a password: `http://IP:PORT/TYPE`
+
 ### Requests:
 | Request Type| Request URL Example |Description|
 |--------------------|-------------|-----------|
