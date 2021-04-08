@@ -4,8 +4,8 @@ using SimpleHttp;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 
@@ -13,6 +13,15 @@ namespace Phonelink
 {
     public partial class Form1 : Form
     {
+        static string AppVersion = "1.4.0";
+
+        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+        static extern int ExitWindowsEx(uint uFlags, uint dwReason);
+
+        //needed to lock PC
+        [System.Runtime.InteropServices.DllImport("user32")]
+        public static extern void LockWorkStation();
+
         public Form1()
         {
             InitializeComponent();
@@ -24,24 +33,24 @@ namespace Phonelink
         {
             UpdateMenus();
             SendUpdateNotif();
-            Route.Add("/", (req, res, props) =>
+            Route.Add("/", (req, res, args) =>
             {
                 res.AsText("server is up, send a link!");
             });
 
             var baseUrl = Convert.ToBoolean(Config.AppSettings.Settings["passwordEnabled"].Value) ? "/" + Config.AppSettings.Settings["password"].Value + "/" : "/";
-            Route.Add($"{baseUrl}url/{{url}}", (req, res, props) =>
+            Route.Add($"{baseUrl}url/{{url}}", (req, res, args) =>
             {
-                var url = props["url"];
+                var url = args["url"];
                 if (!(url.StartsWith("http"))) url = $"http://{url}";
                 System.Diagnostics.Process.Start($"{url}");
                 res.AsText($"opened {url} on your computer.");
                 GC.Collect();
             });
 
-            Route.Add($"{baseUrl}file", (req, res, props) =>
+            Route.Add($"{baseUrl}file", (req, res, args) =>
                 {
-                    SaveFile(req, res, props);
+                    SaveFile(req, res, args);
                     GC.Collect();
                 },
                 "POST");
@@ -50,6 +59,12 @@ namespace Phonelink
                 {
                     SendNotification(req.Headers["title"], req.Headers["body"]);
                     res.AsText($"sent a notification with the title as \"{req.Headers["title"]}\" and the content body as \"{req.Headers["body"]}\"");
+                });
+                
+            Route.Add($"{baseUrl}power/{{state}}", (req, res, args) =>
+            {
+                Console.WriteLine("called");
+                res.AsText(handlePower(args["state"]));
                 });
 
 
@@ -62,10 +77,10 @@ namespace Phonelink
             Console.WriteLine(baseUrl);
         }
 
-        private void SendNotification(string title, string body)
+        private void SendNotification(string notifTitle, string body)
         {
             new ToastContentBuilder()
-                .AddText(title)
+                .AddText(notifTitle)
                 .AddText(body)
                 .Show();
         }
@@ -75,7 +90,7 @@ namespace Phonelink
             if (Convert.ToBoolean(Config.AppSettings.Settings["passwordEnabled"].Value))
             {
                 var update = new GithubUpdateCheck("ahsan-a", "PhoneLink");
-                var isUpdate = update.IsUpdateAvailable(ConfigurationManager.AppSettings.Get("currentVersion"), VersionChange.Minor);
+                var isUpdate = update.IsUpdateAvailable(AppVersion, VersionChange.Minor);
                 if (isUpdate)
                 {
                     SendNotification("PhoneLink Update Available",
@@ -137,6 +152,26 @@ namespace Phonelink
         {
             while (File.Exists($"{path}/{Path.GetFileNameWithoutExtension(fileName)} ({i}){Path.GetExtension(fileName)}")) i++;
             return $"{path}/{Path.GetFileNameWithoutExtension(fileName)} ({i}){Path.GetExtension(fileName)}";
+        }
+
+        private string handlePower(string state)
+        {
+            switch (state)
+            {
+                case "shutdown":
+                    Process.Start("shutdown", "/s /t 0");
+                    return "Shut down successfully.";
+                case "restart":
+                    Process.Start("shutdown", "/r /t 0");
+                    return "Restarted successfully.";
+                case "logout":
+                    ExitWindowsEx(0, 0);
+                    return "Logged off successfully.";
+                case "lock":
+                    LockWorkStation();
+                    return "Locked successfully.";
+                default: return "Invalid argument.";
+            }
         }
 
         // Auto generated methods

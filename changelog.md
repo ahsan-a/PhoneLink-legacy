@@ -1,5 +1,14 @@
 # Changelog
 
+### 1.4.0 (8/4/2021)
+
+-   Added the ability to control your power state.
+-   Changed version from a configuration tag to a variable, meaning your configuration won't have to be cleared every update.
+
+### 1.3.0 (28/3/2021)
+
+-   Added the ability to send notifications
+
 ### 1.2.0 (27/3/2021)
 
 -   Added settings UI.
