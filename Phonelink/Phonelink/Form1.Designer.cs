@@ -67,7 +67,6 @@ namespace Phonelink
             this.OpenSettings,
             this.toolStripSeparator2,
             this.contextUpdateCheck,
-            this.contextEnablePassword,
             this.toolStripSeparator1,
             this.contextMenuExit});
             this.trayMenu.Name = "contextMenuStrip1";
@@ -93,14 +92,6 @@ namespace Phonelink
             this.contextUpdateCheck.Size = new System.Drawing.Size(199, 22);
             this.contextUpdateCheck.Text = "Check for New Releases";
             this.contextUpdateCheck.CheckedChanged += new System.EventHandler(this.toolStripMenuItem1_CheckedChanged);
-            // 
-            // contextEnablePassword
-            // 
-            this.contextEnablePassword.CheckOnClick = true;
-            this.contextEnablePassword.Name = "contextEnablePassword";
-            this.contextEnablePassword.Size = new System.Drawing.Size(199, 22);
-            this.contextEnablePassword.Text = "Enable Password";
-            this.contextEnablePassword.CheckedChanged += new System.EventHandler(this.toolStripMenuItem1_CheckedChanged_1);
             // 
             // toolStripSeparator1
             // 
@@ -278,4 +269,3 @@ namespace Phonelink
         private System.Windows.Forms.Label currentFilelocation;
     }
 }
-

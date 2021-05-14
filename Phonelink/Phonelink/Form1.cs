@@ -13,37 +13,36 @@ namespace Phonelink
 {
     public partial class Form1 : Form
     {
-        static string AppVersion = "1.4.0";
+        private static string AppVersion = "1.4.1";
 
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
-        static extern int ExitWindowsEx(uint uFlags, uint dwReason);
+        private static extern int ExitWindowsEx(uint uFlags, uint dwReason);
 
         //needed to lock PC
         [System.Runtime.InteropServices.DllImport("user32")]
-        public static extern void LockWorkStation();
+        private static extern void LockWorkStation();
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        public static Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        private static Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
         private void Form1_Load(object sender, EventArgs e)
         {
             UpdateMenus();
             SendUpdateNotif();
-            Route.Add("/", (req, res, args) =>
-            {
-                res.AsText("server is up, send a link!");
-            });
+            Route.Add("/", (req, res, args) => { res.AsText("server is up, send a link!"); });
 
-            var baseUrl = Convert.ToBoolean(Config.AppSettings.Settings["passwordEnabled"].Value) ? "/" + Config.AppSettings.Settings["password"].Value + "/" : "/";
+            var baseUrl = Convert.ToBoolean(Config.AppSettings.Settings["passwordEnabled"].Value)
+                ? "/" + Config.AppSettings.Settings["password"].Value + "/"
+                : "/";
             Route.Add($"{baseUrl}url/{{url}}", (req, res, args) =>
             {
                 var url = args["url"];
-                if (!(url.StartsWith("http"))) url = $"http://{url}";
-                System.Diagnostics.Process.Start($"{url}");
+                if (!url.StartsWith("http")) url = $"http://{url}";
+                Process.Start($"{url}");
                 res.AsText($"opened {url} on your computer.");
                 GC.Collect();
             });
@@ -56,16 +55,13 @@ namespace Phonelink
                 "POST");
 
             Route.Add($"{baseUrl}notification", (req, res, args) =>
-                {
-                    SendNotification(req.Headers["title"], req.Headers["body"]);
-                    res.AsText($"sent a notification with the title as \"{req.Headers["title"]}\" and the content body as \"{req.Headers["body"]}\"");
-                });
-                
-            Route.Add($"{baseUrl}power/{{state}}", (req, res, args) =>
             {
-                Console.WriteLine("called");
-                res.AsText(handlePower(args["state"]));
-                });
+                SendNotification(req.Headers["title"], req.Headers["body"]);
+                res.AsText(
+                    $"sent a notification with the title as \"{req.Headers["title"]}\" and the content body as \"{req.Headers["body"]}\"");
+            });
+
+            Route.Add($"{baseUrl}power/{{state}}", (req, res, args) => { res.AsText(handlePower(args["state"])); });
 
 
             HttpServer.ListenAsync(
@@ -130,7 +126,10 @@ namespace Phonelink
                         FileAccess.Write))
                     {
                         f.Value.CopyTo(file);
-                        res.AsText($"Copied {Convert.ToString(f.FileName)} to the {Config.AppSettings.Settings["currentSavePath"].Value} folder.");
+                        res.AsText(
+                            $"Copied {Convert.ToString(f.FileName)} to the {Config.AppSettings.Settings["currentSavePath"].Value} folder.");
+                        file.Dispose();
+                        file.Close();
                     }
                 }
                 catch (Exception ex)
@@ -141,7 +140,10 @@ namespace Phonelink
                         using (var file = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
                         {
                             f.Value.CopyTo(file);
-                            res.AsText($"Copied {Convert.ToString(f.FileName)} to the {Config.AppSettings.Settings["currentSavePath"].Value} folder.");
+                            res.AsText(
+                                $"Copied {Convert.ToString(f.FileName)} to the {Config.AppSettings.Settings["currentSavePath"].Value} folder.");
+                            file.Dispose();
+                            file.Close();
                         }
                     }
                 }
@@ -150,7 +152,8 @@ namespace Phonelink
 
         private string getFileName(string fileName, string path, int i)
         {
-            while (File.Exists($"{path}/{Path.GetFileNameWithoutExtension(fileName)} ({i}){Path.GetExtension(fileName)}")) i++;
+            while (File.Exists(
+                $"{path}/{Path.GetFileNameWithoutExtension(fileName)} ({i}){Path.GetExtension(fileName)}")) i++;
             return $"{path}/{Path.GetFileNameWithoutExtension(fileName)} ({i}){Path.GetExtension(fileName)}";
         }
 
@@ -192,16 +195,10 @@ namespace Phonelink
             UpdateAppConfig();
         }
 
-        private void toolStripMenuItem1_CheckedChanged_1(object sender, EventArgs e)
-        {
-            Config.AppSettings.Settings["passwordEnabled"].Value = Convert.ToString(contextUpdateCheck.Checked);
-            UpdateAppConfig();
-        }
-
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
-                (e.KeyChar != '.'))
+                e.KeyChar != '.')
             {
                 e.Handled = true;
             }
@@ -229,10 +226,10 @@ namespace Phonelink
             Config.AppSettings.Settings["port"].Value = PortInput.Text;
             Config.AppSettings.Settings["password"].Value = PasswordInput.Text;
             Config.AppSettings.Settings["checkNewRelease"].Value = Convert.ToString(UpdateCheckBox.Checked);
-            Config.AppSettings.Settings["passwordEnabled"].Value = Convert.ToString(UpdateCheckBox.Checked);
+            Config.AppSettings.Settings["passwordEnabled"].Value = Convert.ToString(EnablePasswordBox.Checked);
             UpdateAppConfig();
             MessageBox.Show(
-                        "Saved settings. Changing certain settings such as your port and password may need you to restart your app to take effect.");
+                "Saved settings. Changing certain settings such as your port and password may need you to restart your app to take effect.");
             Hide();
         }
 
@@ -245,6 +242,7 @@ namespace Phonelink
                 {
                     Config.AppSettings.Settings["currentSavePath"].Value = fbd.SelectedPath;
                 }
+
                 UpdateAppConfig();
             }
         }
