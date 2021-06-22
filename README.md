@@ -2,7 +2,7 @@
   
 # PhoneLink
 
-Send links to your computer from your phone, or from any device in your local network.
+Link your iPhone to your computer via HTTP requests.
 
 ## Installation
 
