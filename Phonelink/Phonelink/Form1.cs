@@ -1,11 +1,11 @@
-﻿using System;
+﻿using SimpleHttp;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms;
 using System.Threading;
-using SimpleHttp;
+using System.Windows.Forms;
 
 namespace Phonelink {
 
@@ -23,10 +23,6 @@ namespace Phonelink {
 				{"passwordEnabled", "true" },
 				{"currentSavePath", "savedFiles" }
 			};
-
-		public System.Threading.Tasks.Task httpListener;
-		private bool httpServerUp = false;
-		private CancellationTokenSource cancelToken = new CancellationTokenSource();
 
 		public Form1() => InitializeComponent();
 
@@ -49,61 +45,64 @@ namespace Phonelink {
 			UpdateConfigFile();
 		}
 
-		public System.Threading.Tasks.Task createRoutes() {
-			//if (httpServerUp) {
-			//	cancelToken.Cancel();
-			//	try {
-			//		cancelToken.Token.ThrowIfCancellationRequested();
-			//	}
-			//	catch { }
-			//	cancelToken = new CancellationTokenSource();
-			//}
-			Route.Add("/", (req, res, args) => res.AsText("Phonelink is running on this computer."));
+		private bool checkPassword(System.Net.HttpListenerRequest req) {
+			Console.WriteLine($"header: {req.Headers["password"]}, password: {settings["password"].Value}");
+			if (Convert.ToBoolean(settings["passwordEnabled"].Value)
+				&& req.Headers["password"] != settings["password"].Value)
+				return false;
 
-			var baseUrl = Convert.ToBoolean(Config.AppSettings.Settings["passwordEnabled"].Value)
-				? "/" + Config.AppSettings.Settings["password"].Value + "/"
-				: "/";
-			
-
-			// Sends URL
-			Route.Add($"{baseUrl}url/{{url}}", (req, res, args) =>
-			{
-				var url = args["url"];
-				if (!url.StartsWith("http")) url = $"http://{url}";
-				Process.Start($"{url}");
-				res.AsText($"opened {url} on your computer.");
-			});
-
-			// Sends File
-			Route.Add($"{baseUrl}file", (req, res, args) => SaveFile(req, res, args), "POST");
-
-			// Sends Notification
-			Route.Add($"{baseUrl}notification", (req, res, args) =>
-			{
-				SendNotif(req.Headers["title"], req.Headers["body"]);
-				res.AsText(
-					$"sent a notification with the title as \"{req.Headers["title"]}\" and the content body as \"{req.Headers["body"]}\"");
-			});
-
-			// Sends Power State
-			Route.Add($"{baseUrl}power/{{state}}", (req, res, args) => res.AsText(HandlePower(args["state"])));
-
-			httpServerUp = true;
-
-			return HttpServer.ListenAsync(
-				Convert.ToInt32(Config.AppSettings.Settings["port"].Value),
-				cancelToken.Token,
-				Route.OnHttpRequestAsync
-			);
+			return true;
 		}
 
 		private void Form1_Load(object sender, EventArgs e) {
 			SetConfiguration();
-
 			MaximizeBox = false;
-
 			SendUpdateNotif(AppVersion);
-			httpListener = createRoutes();
+
+			Route.Add("/", (req, res, args) => res.AsText("Phonelink is running on this computer."));
+
+			// Sends URL
+			Route.Add("/url/{url}", (req, res, args) =>
+			{
+				if (!checkPassword(req)) res.AsText("Your password is incorrect.");
+				else {
+					var url = args["url"];
+					if (!url.StartsWith("http")) url = $"http://{url}";
+					Process.Start($"{url}");
+					res.AsText($"opened {url} on your computer.");
+				}
+			});
+
+			// Sends File
+			Route.Add("/file", (req, res, args) =>
+			{
+				if (!checkPassword(req)) res.AsText("Your password is incorrect.");
+				else SaveFile(req, res, args);
+			}, "POST");
+
+			// Sends Notification
+			Route.Add("/notification", (req, res, args) =>
+			{
+				if (!checkPassword(req)) res.AsText("Your password is incorrect.");
+				else {
+					SendNotif(req.Headers["title"], req.Headers["body"]);
+					res.AsText(
+						$"sent a notification with the title as \"{req.Headers["title"]}\" and the content body as \"{req.Headers["body"]}\"");
+				}
+			});
+
+			// Sends Power State
+			Route.Add("/power/{state}", (req, res, args) =>
+			{
+				if (!checkPassword(req)) res.AsText("Your password is incorrect.");
+				else res.AsText(HandlePower(args["state"]));
+			});
+
+			HttpServer.ListenAsync(
+				Convert.ToInt32(Config.AppSettings.Settings["port"].Value),
+				CancellationToken.None,
+				Route.OnHttpRequestAsync
+			);
 		}
 
 		private void PortKeypress(object sender, KeyPressEventArgs e) {

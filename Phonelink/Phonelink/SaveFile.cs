@@ -1,7 +1,6 @@
 ﻿using SimpleHttp;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Net;
 
@@ -35,6 +34,12 @@ namespace Phonelink {
 				catch (Exception ex) {
 					if (ex.HResult == -2147024816) {
 						var path = getFileName(file.FileName, Config.AppSettings.Settings["currentSavePath"].Value, 1);
+						using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write)) {
+							SaveToDisk(file, fs, res);
+						}
+					} else if (ex.HResult == -2147024893) {
+						Directory.CreateDirectory(Config.AppSettings.Settings["currentSavePath"].Value);
+						string path = getFileName(file.FileName, Config.AppSettings.Settings["currentSavePath"].Value, 1);
 						using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write)) {
 							SaveToDisk(file, fs, res);
 						}
