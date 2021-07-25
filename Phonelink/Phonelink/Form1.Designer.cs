@@ -29,243 +29,330 @@ namespace Phonelink
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.trayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.OpenSettings = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.contextUpdateCheck = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextEnablePassword = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.contextMenuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.title = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.SubmitNewSettings = new System.Windows.Forms.Button();
-            this.EditSaveFileLocation = new System.Windows.Forms.Button();
-            this.EnablePasswordBox = new System.Windows.Forms.CheckBox();
-            this.UpdateCheckBox = new System.Windows.Forms.CheckBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.PortInput = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.PasswordInput = new System.Windows.Forms.TextBox();
-            this.currentFilelocation = new System.Windows.Forms.Label();
-            this.trayMenu.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // trayIcon
-            // 
-            this.trayIcon.ContextMenuStrip = this.trayMenu;
-            this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
-            this.trayIcon.Text = "PhoneLink";
-            this.trayIcon.Visible = true;
-            this.trayIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.trayIcon_MouseClick);
-            // 
-            // trayMenu
-            // 
-            this.trayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.OpenSettings,
-            this.toolStripSeparator2,
-            this.contextUpdateCheck,
+			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+			this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
+			this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.ContextMenuAppname = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.openSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.contextEnablePassword = new System.Windows.Forms.ToolStripMenuItem();
+			this.FormTitle = new System.Windows.Forms.Label();
+			this.EnablePassword = new System.Windows.Forms.CheckBox();
+			this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+			this.AutoUpdateCheck = new System.Windows.Forms.CheckBox();
+			this.Checkboxes = new System.Windows.Forms.Panel();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.Port = new System.Windows.Forms.TextBox();
+			this.PortLabel = new System.Windows.Forms.Label();
+			this.panel2 = new System.Windows.Forms.Panel();
+			this.PasswordInput = new System.Windows.Forms.TextBox();
+			this.PasswordLabel = new System.Windows.Forms.Label();
+			this.ChangeSaveLocation = new System.Windows.Forms.Button();
+			this.label1 = new System.Windows.Forms.Label();
+			this.SaveLocationLabel = new System.Windows.Forms.Label();
+			this.SaveSettingsButton = new System.Windows.Forms.Button();
+			this.contextMenu.SuspendLayout();
+			this.Checkboxes.SuspendLayout();
+			this.panel1.SuspendLayout();
+			this.panel2.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// trayIcon
+			// 
+			this.trayIcon.ContextMenuStrip = this.contextMenu;
+			this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
+			this.trayIcon.Text = "PhoneLink";
+			this.trayIcon.Visible = true;
+			this.trayIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.trayIcon_MouseClick);
+			// 
+			// contextMenu
+			// 
+			this.contextMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(52)))), ((int)(((byte)(64)))));
+			this.contextMenu.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ContextMenuAppname,
             this.toolStripSeparator1,
-            this.contextMenuExit});
-            this.trayMenu.Name = "contextMenuStrip1";
-            this.trayMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.trayMenu.Size = new System.Drawing.Size(200, 104);
-            // 
-            // OpenSettings
-            // 
-            this.OpenSettings.Name = "OpenSettings";
-            this.OpenSettings.Size = new System.Drawing.Size(199, 22);
-            this.OpenSettings.Text = "Open Settings";
-            this.OpenSettings.Click += new System.EventHandler(this.OpenSettings_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(196, 6);
-            // 
-            // contextUpdateCheck
-            // 
-            this.contextUpdateCheck.CheckOnClick = true;
-            this.contextUpdateCheck.Name = "contextUpdateCheck";
-            this.contextUpdateCheck.Size = new System.Drawing.Size(199, 22);
-            this.contextUpdateCheck.Text = "Check for New Releases";
-            this.contextUpdateCheck.CheckedChanged += new System.EventHandler(this.toolStripMenuItem1_CheckedChanged);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
-            // 
-            // contextMenuExit
-            // 
-            this.contextMenuExit.Name = "contextMenuExit";
-            this.contextMenuExit.Size = new System.Drawing.Size(199, 22);
-            this.contextMenuExit.Text = "Exit";
-            this.contextMenuExit.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // title
-            // 
-            this.title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.title.Font = new System.Drawing.Font("Segoe UI Semibold", 16F, System.Drawing.FontStyle.Bold);
-            this.title.Location = new System.Drawing.Point(0, 0);
-            this.title.Name = "title";
-            this.title.Padding = new System.Windows.Forms.Padding(0, 7, 0, 0);
-            this.title.Size = new System.Drawing.Size(432, 262);
-            this.title.TabIndex = 6;
-            this.title.Text = "PhoneLink Settings";
-            this.title.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // label2
-            // 
-            this.label2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(0, 244);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(432, 18);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Some changes will be applied on app restart. Sorry about this UI.";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // SubmitNewSettings
-            // 
-            this.SubmitNewSettings.Location = new System.Drawing.Point(181, 214);
-            this.SubmitNewSettings.Name = "SubmitNewSettings";
-            this.SubmitNewSettings.Size = new System.Drawing.Size(75, 23);
-            this.SubmitNewSettings.TabIndex = 5;
-            this.SubmitNewSettings.Text = "Submit";
-            this.SubmitNewSettings.UseVisualStyleBackColor = true;
-            this.SubmitNewSettings.Click += new System.EventHandler(this.SubmitNewSettings_Click);
-            // 
-            // EditSaveFileLocation
-            // 
-            this.EditSaveFileLocation.Location = new System.Drawing.Point(148, 166);
-            this.EditSaveFileLocation.Name = "EditSaveFileLocation";
-            this.EditSaveFileLocation.Size = new System.Drawing.Size(141, 23);
-            this.EditSaveFileLocation.TabIndex = 4;
-            this.EditSaveFileLocation.Text = "Edit Save File Location";
-            this.EditSaveFileLocation.UseVisualStyleBackColor = true;
-            this.EditSaveFileLocation.Click += new System.EventHandler(this.EditSaveFileLocation_Click);
-            // 
-            // EnablePasswordBox
-            // 
-            this.EnablePasswordBox.AutoSize = true;
-            this.EnablePasswordBox.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EnablePasswordBox.Location = new System.Drawing.Point(156, 50);
-            this.EnablePasswordBox.Name = "EnablePasswordBox";
-            this.EnablePasswordBox.Size = new System.Drawing.Size(129, 21);
-            this.EnablePasswordBox.TabIndex = 0;
-            this.EnablePasswordBox.Text = "Enable Password";
-            this.EnablePasswordBox.UseVisualStyleBackColor = true;
-            // 
-            // UpdateCheckBox
-            // 
-            this.UpdateCheckBox.AutoSize = true;
-            this.UpdateCheckBox.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UpdateCheckBox.Location = new System.Drawing.Point(152, 75);
-            this.UpdateCheckBox.Name = "UpdateCheckBox";
-            this.UpdateCheckBox.Size = new System.Drawing.Size(138, 21);
-            this.UpdateCheckBox.TabIndex = 1;
-            this.UpdateCheckBox.Text = "Check for Updates";
-            this.UpdateCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(106, 107);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(72, 21);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Edit Port";
-            // 
-            // PortInput
-            // 
-            this.PortInput.Location = new System.Drawing.Point(203, 107);
-            this.PortInput.MaxLength = 6;
-            this.PortInput.Name = "PortInput";
-            this.PortInput.Size = new System.Drawing.Size(141, 20);
-            this.PortInput.TabIndex = 2;
-            this.PortInput.WordWrap = false;
-            this.PortInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(67, 133);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(111, 21);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "Edit Password";
-            // 
-            // PasswordInput
-            // 
-            this.PasswordInput.Location = new System.Drawing.Point(203, 133);
-            this.PasswordInput.MaxLength = 6;
-            this.PasswordInput.Name = "PasswordInput";
-            this.PasswordInput.Size = new System.Drawing.Size(141, 20);
-            this.PasswordInput.TabIndex = 3;
-            this.PasswordInput.WordWrap = false;
-            // 
-            // currentFilelocation
-            // 
-            this.currentFilelocation.AutoSize = true;
-            this.currentFilelocation.Location = new System.Drawing.Point(12, 193);
-            this.currentFilelocation.Name = "currentFilelocation";
-            this.currentFilelocation.Size = new System.Drawing.Size(0, 13);
-            this.currentFilelocation.TabIndex = 7;
-            // 
-            // Form1
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(432, 262);
-            this.Controls.Add(this.currentFilelocation);
-            this.Controls.Add(this.UpdateCheckBox);
-            this.Controls.Add(this.EnablePasswordBox);
-            this.Controls.Add(this.EditSaveFileLocation);
-            this.Controls.Add(this.SubmitNewSettings);
-            this.Controls.Add(this.PasswordInput);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.PortInput);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.title);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
-            this.Text = "Phonelink";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.Shown += new System.EventHandler(this.Form1_Shown);
-            this.Resize += new System.EventHandler(this.Form1_Resize);
-            this.trayMenu.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            this.openSettingsToolStripMenuItem,
+            this.checkForUpdatesToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.exitToolStripMenuItem});
+			this.contextMenu.Name = "contextMenu";
+			this.contextMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+			this.contextMenu.Size = new System.Drawing.Size(174, 104);
+			// 
+			// ContextMenuAppname
+			// 
+			this.ContextMenuAppname.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.ContextMenuAppname.Enabled = false;
+			this.ContextMenuAppname.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.ContextMenuAppname.ForeColor = System.Drawing.Color.White;
+			this.ContextMenuAppname.Image = ((System.Drawing.Image)(resources.GetObject("ContextMenuAppname.Image")));
+			this.ContextMenuAppname.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.ContextMenuAppname.Name = "ContextMenuAppname";
+			this.ContextMenuAppname.Padding = new System.Windows.Forms.Padding(1);
+			this.ContextMenuAppname.Size = new System.Drawing.Size(175, 22);
+			this.ContextMenuAppname.Text = "Phonelink";
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(170, 6);
+			// 
+			// openSettingsToolStripMenuItem
+			// 
+			this.openSettingsToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(244)))));
+			this.openSettingsToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.openSettingsToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(233)))), ((int)(((byte)(240)))));
+			this.openSettingsToolStripMenuItem.Name = "openSettingsToolStripMenuItem";
+			this.openSettingsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+			this.openSettingsToolStripMenuItem.Text = "Open Settings";
+			this.openSettingsToolStripMenuItem.Click += new System.EventHandler(this.OpenSettings_Click);
+			// 
+			// checkForUpdatesToolStripMenuItem
+			// 
+			this.checkForUpdatesToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(244)))));
+			this.checkForUpdatesToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(233)))), ((int)(((byte)(240)))));
+			this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+			this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+			this.checkForUpdatesToolStripMenuItem.Text = "Check For Updates";
+			this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(170, 6);
+			// 
+			// exitToolStripMenuItem
+			// 
+			this.exitToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(244)))));
+			this.exitToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(233)))), ((int)(((byte)(240)))));
+			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+			this.exitToolStripMenuItem.Text = "Exit";
+			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+			// 
+			// contextEnablePassword
+			// 
+			this.contextEnablePassword.Name = "contextEnablePassword";
+			this.contextEnablePassword.Size = new System.Drawing.Size(32, 19);
+			// 
+			// FormTitle
+			// 
+			this.FormTitle.Dock = System.Windows.Forms.DockStyle.Top;
+			this.FormTitle.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.FormTitle.ForeColor = System.Drawing.Color.White;
+			this.FormTitle.Location = new System.Drawing.Point(0, 0);
+			this.FormTitle.Name = "FormTitle";
+			this.FormTitle.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
+			this.FormTitle.Size = new System.Drawing.Size(547, 59);
+			this.FormTitle.TabIndex = 1;
+			this.FormTitle.Text = "Phonelink";
+			this.FormTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// EnablePassword
+			// 
+			this.EnablePassword.AutoSize = true;
+			this.EnablePassword.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.EnablePassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(244)))));
+			this.EnablePassword.Location = new System.Drawing.Point(0, 0);
+			this.EnablePassword.Name = "EnablePassword";
+			this.EnablePassword.Size = new System.Drawing.Size(142, 24);
+			this.EnablePassword.TabIndex = 4;
+			this.EnablePassword.Text = "Enable Password";
+			this.EnablePassword.UseVisualStyleBackColor = true;
+			// 
+			// AutoUpdateCheck
+			// 
+			this.AutoUpdateCheck.AutoSize = true;
+			this.AutoUpdateCheck.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.AutoUpdateCheck.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(244)))));
+			this.AutoUpdateCheck.Location = new System.Drawing.Point(0, 20);
+			this.AutoUpdateCheck.Name = "AutoUpdateCheck";
+			this.AutoUpdateCheck.Size = new System.Drawing.Size(160, 24);
+			this.AutoUpdateCheck.TabIndex = 5;
+			this.AutoUpdateCheck.Text = "Auto Update Check";
+			this.AutoUpdateCheck.UseVisualStyleBackColor = true;
+			// 
+			// Checkboxes
+			// 
+			this.Checkboxes.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+			this.Checkboxes.Controls.Add(this.AutoUpdateCheck);
+			this.Checkboxes.Controls.Add(this.EnablePassword);
+			this.Checkboxes.Location = new System.Drawing.Point(200, 62);
+			this.Checkboxes.Name = "Checkboxes";
+			this.Checkboxes.Size = new System.Drawing.Size(164, 44);
+			this.Checkboxes.TabIndex = 6;
+			// 
+			// panel1
+			// 
+			this.panel1.Controls.Add(this.Port);
+			this.panel1.Controls.Add(this.PortLabel);
+			this.panel1.Location = new System.Drawing.Point(133, 128);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(281, 26);
+			this.panel1.TabIndex = 7;
+			// 
+			// Port
+			// 
+			this.Port.Location = new System.Drawing.Point(88, 4);
+			this.Port.MaxLength = 5;
+			this.Port.Name = "Port";
+			this.Port.Size = new System.Drawing.Size(190, 20);
+			this.Port.TabIndex = 1;
+			this.Port.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PortKeypress);
+			// 
+			// PortLabel
+			// 
+			this.PortLabel.AutoSize = true;
+			this.PortLabel.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.PortLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(244)))));
+			this.PortLabel.Location = new System.Drawing.Point(4, 4);
+			this.PortLabel.Name = "PortLabel";
+			this.PortLabel.Size = new System.Drawing.Size(37, 20);
+			this.PortLabel.TabIndex = 0;
+			this.PortLabel.Text = "Port";
+			// 
+			// panel2
+			// 
+			this.panel2.Controls.Add(this.PasswordInput);
+			this.panel2.Controls.Add(this.PasswordLabel);
+			this.panel2.Location = new System.Drawing.Point(133, 160);
+			this.panel2.Name = "panel2";
+			this.panel2.Size = new System.Drawing.Size(281, 26);
+			this.panel2.TabIndex = 8;
+			// 
+			// PasswordInput
+			// 
+			this.PasswordInput.Location = new System.Drawing.Point(88, 4);
+			this.PasswordInput.Name = "PasswordInput";
+			this.PasswordInput.Size = new System.Drawing.Size(190, 20);
+			this.PasswordInput.TabIndex = 1;
+			// 
+			// PasswordLabel
+			// 
+			this.PasswordLabel.AutoSize = true;
+			this.PasswordLabel.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.PasswordLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(244)))));
+			this.PasswordLabel.Location = new System.Drawing.Point(3, 1);
+			this.PasswordLabel.Name = "PasswordLabel";
+			this.PasswordLabel.Size = new System.Drawing.Size(73, 20);
+			this.PasswordLabel.TabIndex = 0;
+			this.PasswordLabel.Text = "Password";
+			// 
+			// ChangeSaveLocation
+			// 
+			this.ChangeSaveLocation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(76)))), ((int)(((byte)(94)))));
+			this.ChangeSaveLocation.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(66)))), ((int)(((byte)(82)))));
+			this.ChangeSaveLocation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.ChangeSaveLocation.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.ChangeSaveLocation.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(233)))), ((int)(((byte)(240)))));
+			this.ChangeSaveLocation.Location = new System.Drawing.Point(182, 250);
+			this.ChangeSaveLocation.Name = "ChangeSaveLocation";
+			this.ChangeSaveLocation.Size = new System.Drawing.Size(183, 30);
+			this.ChangeSaveLocation.TabIndex = 9;
+			this.ChangeSaveLocation.TabStop = false;
+			this.ChangeSaveLocation.Text = "Change Save File Location";
+			this.ChangeSaveLocation.UseVisualStyleBackColor = false;
+			this.ChangeSaveLocation.Click += new System.EventHandler(this.ChangeSaveLocation_Click);
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(0, 0);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(35, 13);
+			this.label1.TabIndex = 10;
+			this.label1.Text = "label1";
+			// 
+			// SaveLocationLabel
+			// 
+			this.SaveLocationLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.SaveLocationLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(233)))), ((int)(((byte)(240)))));
+			this.SaveLocationLabel.Location = new System.Drawing.Point(6, 189);
+			this.SaveLocationLabel.Name = "SaveLocationLabel";
+			this.SaveLocationLabel.Size = new System.Drawing.Size(534, 55);
+			this.SaveLocationLabel.TabIndex = 11;
+			this.SaveLocationLabel.Text = "Save File Location";
+			this.SaveLocationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// SaveSettingsButton
+			// 
+			this.SaveSettingsButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(192)))), ((int)(((byte)(208)))));
+			this.SaveSettingsButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(66)))), ((int)(((byte)(82)))));
+			this.SaveSettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.SaveSettingsButton.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.SaveSettingsButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(52)))), ((int)(((byte)(64)))));
+			this.SaveSettingsButton.Location = new System.Drawing.Point(182, 286);
+			this.SaveSettingsButton.Name = "SaveSettingsButton";
+			this.SaveSettingsButton.Size = new System.Drawing.Size(183, 30);
+			this.SaveSettingsButton.TabIndex = 12;
+			this.SaveSettingsButton.TabStop = false;
+			this.SaveSettingsButton.Text = "Save Settings";
+			this.SaveSettingsButton.UseVisualStyleBackColor = false;
+			this.SaveSettingsButton.Click += new System.EventHandler(this.SaveSettingsButton_Click);
+			// 
+			// Form1
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(52)))), ((int)(((byte)(64)))));
+			this.ClientSize = new System.Drawing.Size(547, 342);
+			this.Controls.Add(this.SaveSettingsButton);
+			this.Controls.Add(this.SaveLocationLabel);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.ChangeSaveLocation);
+			this.Controls.Add(this.panel2);
+			this.Controls.Add(this.panel1);
+			this.Controls.Add(this.Checkboxes);
+			this.Controls.Add(this.FormTitle);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Name = "Form1";
+			this.Text = "Phonelink";
+			this.Load += new System.EventHandler(this.Form1_Load);
+			this.Shown += new System.EventHandler(this.Form1_Shown);
+			this.Resize += new System.EventHandler(this.Form1_Resize);
+			this.contextMenu.ResumeLayout(false);
+			this.Checkboxes.ResumeLayout(false);
+			this.Checkboxes.PerformLayout();
+			this.panel1.ResumeLayout(false);
+			this.panel1.PerformLayout();
+			this.panel2.ResumeLayout(false);
+			this.panel2.PerformLayout();
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.NotifyIcon trayIcon;
-        private System.Windows.Forms.ContextMenuStrip trayMenu;
-        private System.Windows.Forms.ToolStripMenuItem contextMenuExit;
-        private System.Windows.Forms.ToolStripMenuItem contextUpdateCheck;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem contextEnablePassword;
-        private System.Windows.Forms.Label title;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button SubmitNewSettings;
-        private System.Windows.Forms.Button EditSaveFileLocation;
-        private System.Windows.Forms.CheckBox EnablePasswordBox;
-        private System.Windows.Forms.CheckBox UpdateCheckBox;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox PortInput;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox PasswordInput;
-        private System.Windows.Forms.ToolStripMenuItem OpenSettings;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.Label currentFilelocation;
-    }
+		private System.Windows.Forms.ContextMenuStrip contextMenu;
+		private System.Windows.Forms.ToolStripMenuItem openSettingsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem ContextMenuAppname;
+		private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+		private System.Windows.Forms.Label FormTitle;
+		private System.Windows.Forms.CheckBox EnablePassword;
+		private System.Windows.Forms.ColorDialog colorDialog1;
+		private System.Windows.Forms.CheckBox AutoUpdateCheck;
+		private System.Windows.Forms.Panel Checkboxes;
+		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.TextBox Port;
+		private System.Windows.Forms.Label PortLabel;
+		private System.Windows.Forms.Panel panel2;
+		private System.Windows.Forms.TextBox PasswordInput;
+		private System.Windows.Forms.Label PasswordLabel;
+		private System.Windows.Forms.Button ChangeSaveLocation;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label SaveLocationLabel;
+		private System.Windows.Forms.Button SaveSettingsButton;
+	}
 }
