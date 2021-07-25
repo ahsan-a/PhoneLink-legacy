@@ -1,255 +1,169 @@
-﻿using Mayerch1.GithubUpdateCheck;
-using Microsoft.Toolkit.Uwp.Notifications;
-using SimpleHttp;
+﻿using SimpleHttp;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
-using System.IO;
-using System.Net;
+using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
-namespace Phonelink
-{
-    public partial class Form1 : Form
-    {
-        private static string AppVersion = "1.4.1";
+namespace Phonelink {
 
-        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
-        private static extern int ExitWindowsEx(uint uFlags, uint dwReason);
+	public partial class Form1 : Form {
+		private static readonly string AppVersion = "2.0.0";
 
-        //needed to lock PC
-        [System.Runtime.InteropServices.DllImport("user32")]
-        private static extern void LockWorkStation();
+		private static Configuration Config;
+		public KeyValueConfigurationCollection settings;
 
-        public Form1()
-        {
-            InitializeComponent();
-        }
+		private Dictionary<string, string> settingsItems = new Dictionary<string, string>()
+			{
+				{"port", "1234" },
+				{"password", "1234" },
+				{"checkNewRelease", "true" },
+				{"passwordEnabled", "true" },
+				{"currentSavePath", "savedFiles" }
+			};
+		private CancellationTokenSource cancelToken = new CancellationTokenSource();
+		private System.Threading.Tasks.Task httpListener;
 
-        private static Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+		public Form1() => InitializeComponent();
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            UpdateMenus();
-            SendUpdateNotif();
-            Route.Add("/", (req, res, args) => { res.AsText("server is up, send a link!"); });
+		private void SetConfiguration() {
+			Configuration roaming = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
-            var baseUrl = Convert.ToBoolean(Config.AppSettings.Settings["passwordEnabled"].Value)
-                ? "/" + Config.AppSettings.Settings["password"].Value + "/"
-                : "/";
-            Route.Add($"{baseUrl}url/{{url}}", (req, res, args) =>
-            {
-                var url = args["url"];
-                if (!url.StartsWith("http")) url = $"http://{url}";
-                Process.Start($"{url}");
-                res.AsText($"opened {url} on your computer.");
-                GC.Collect();
-            });
+			ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap
+			{
+				ExeConfigFilename = roaming.FilePath
+			};
 
-            Route.Add($"{baseUrl}file", (req, res, args) =>
-                {
-                    SaveFile(req, res, args);
-                    GC.Collect();
-                },
-                "POST");
+			Config = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+			settings = Config.AppSettings.Settings;
 
-            Route.Add($"{baseUrl}notification", (req, res, args) =>
-            {
-                SendNotification(req.Headers["title"], req.Headers["body"]);
-                res.AsText(
-                    $"sent a notification with the title as \"{req.Headers["title"]}\" and the content body as \"{req.Headers["body"]}\"");
-            });
+			if (!settings.AllKeys.OrderBy(x => x).SequenceEqual(settingsItems.Keys.OrderBy(x => x))) {
+				foreach (KeyValuePair<string, string> x in settingsItems) if (!settings.AllKeys.Contains(x.Key)) settings.Add(x.Key, x.Value);
+				foreach (string x in settings.AllKeys) if (!settingsItems.ContainsKey(x)) settings.Remove(x);
+			}
 
-            Route.Add($"{baseUrl}power/{{state}}", (req, res, args) => { res.AsText(handlePower(args["state"])); });
+			UpdateConfigFile();
+		}
 
+		private bool checkPassword(System.Net.HttpListenerRequest req) {
+			Console.WriteLine($"header: {req.Headers["password"]}, password: {settings["password"].Value}");
+			if (Convert.ToBoolean(settings["passwordEnabled"].Value)
+				&& req.Headers["password"] != settings["password"].Value)
+				return false;
 
-            HttpServer.ListenAsync(
-                Convert.ToInt32(Config.AppSettings.Settings["port"].Value),
-                System.Threading.CancellationToken.None,
-                Route.OnHttpRequestAsync
-            );
+			return true;
+		}
 
-            Console.WriteLine(baseUrl);
-        }
+		private void createRoutes() {
+			cancelToken.Cancel();
+			try {
+				cancelToken.Token.ThrowIfCancellationRequested();
+			}
+			catch { }
+			try {
+				httpListener?.Dispose();
+			}
+			catch { }
 
-        private void SendNotification(string notifTitle, string body)
-        {
-            new ToastContentBuilder()
-                .AddText(notifTitle)
-                .AddText(body)
-                .Show();
-        }
+			Route.Add("/", (req, res, args) => res.AsText("Phonelink is running on this computer."));
 
-        private void SendUpdateNotif()
-        {
-            if (Convert.ToBoolean(Config.AppSettings.Settings["passwordEnabled"].Value))
-            {
-                var update = new GithubUpdateCheck("ahsan-a", "PhoneLink");
-                var isUpdate = update.IsUpdateAvailable(AppVersion, VersionChange.Minor);
-                if (isUpdate)
-                {
-                    SendNotification("PhoneLink Update Available",
-                        "Update to get the latest features. A new release is available on the Github repository. You can disable checking for releases in the PhoneLink menu.");
-                }
-            }
-        }
+			// Sends URL
+			Route.Add("/url/{url}", (req, res, args) =>
+			{
+				if (!checkPassword(req)) res.AsText("Your password is incorrect.");
+				else {
+					var url = args["url"];
+					if (!url.StartsWith("http")) url = $"http://{url}";
+					Process.Start($"{url}");
+					res.AsText($"opened {url} on your computer.");
+				}
+			});
 
-        private void UpdateMenus()
-        {
-            contextUpdateCheck.Checked = Convert.ToBoolean(Config.AppSettings.Settings["checkNewRelease"].Value);
-            contextEnablePassword.Checked = Convert.ToBoolean(Config.AppSettings.Settings["passwordEnabled"].Value);
-            PortInput.Text = Config.AppSettings.Settings["port"].Value;
-            PasswordInput.Text = Config.AppSettings.Settings["password"].Value;
-            EnablePasswordBox.Checked = Convert.ToBoolean(Config.AppSettings.Settings["passwordEnabled"].Value);
-            UpdateCheckBox.Checked = Convert.ToBoolean(Config.AppSettings.Settings["checkNewRelease"].Value);
-            currentFilelocation.Text = Config.AppSettings.Settings["currentSavePath"].Value;
-        }
+			// Sends File
+			Route.Add("/file", (req, res, args) =>
+			{
+				if (!checkPassword(req)) res.AsText("Your password is incorrect.");
+				else SaveFile(req, res, args);
+			}, "POST");
 
-        private void UpdateAppConfig()
-        {
-            Config.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection("appSettings");
-            UpdateMenus();
-        }
+			// Sends Notification
+			Route.Add("/notification", (req, res, args) =>
+			{
+				if (!checkPassword(req)) res.AsText("Your password is incorrect.");
+				else {
+					SendNotif(req.Headers["title"], req.Headers["body"]);
+					res.AsText(
+						$"sent a notification with the title as \"{req.Headers["title"]}\" and the content body as \"{req.Headers["body"]}\"");
+				}
+			});
 
-        private void SaveFile(HttpListenerRequest req, HttpListenerResponse res, Dictionary<string, string> args)
-        {
-            var files = req.ParseBody(args);
-            //save files
-            foreach (var f in files.Values)
-            {
-                try
-                {
-                    using (var file = new FileStream(
-                        $"{Config.AppSettings.Settings["currentSavePath"].Value}/{f.FileName}", FileMode.CreateNew,
-                        FileAccess.Write))
-                    {
-                        f.Value.CopyTo(file);
-                        res.AsText(
-                            $"Copied {Convert.ToString(f.FileName)} to the {Config.AppSettings.Settings["currentSavePath"].Value} folder.");
-                        file.Dispose();
-                        file.Close();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (ex.HResult == -2147024816)
-                    {
-                        var path = getFileName(f.FileName, Config.AppSettings.Settings["currentSavePath"].Value, 0);
-                        using (var file = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
-                        {
-                            f.Value.CopyTo(file);
-                            res.AsText(
-                                $"Copied {Convert.ToString(f.FileName)} to the {Config.AppSettings.Settings["currentSavePath"].Value} folder.");
-                            file.Dispose();
-                            file.Close();
-                        }
-                    }
-                }
-            }
-        }
+			// Sends Power State
+			Route.Add("/power/{state}", (req, res, args) =>
+			{
+				if (!checkPassword(req)) res.AsText("Your password is incorrect.");
+				else res.AsText(HandlePower(args["state"]));
+			});
 
-        private string getFileName(string fileName, string path, int i)
-        {
-            while (File.Exists(
-                $"{path}/{Path.GetFileNameWithoutExtension(fileName)} ({i}){Path.GetExtension(fileName)}")) i++;
-            return $"{path}/{Path.GetFileNameWithoutExtension(fileName)} ({i}){Path.GetExtension(fileName)}";
-        }
+			cancelToken = new CancellationTokenSource();
 
-        private string handlePower(string state)
-        {
-            switch (state)
-            {
-                case "shutdown":
-                    Process.Start("shutdown", "/s /t 0");
-                    return "Shut down successfully.";
-                case "restart":
-                    Process.Start("shutdown", "/r /t 0");
-                    return "Restarted successfully.";
-                case "logout":
-                    ExitWindowsEx(0, 0);
-                    return "Logged off successfully.";
-                case "lock":
-                    LockWorkStation();
-                    return "Locked successfully.";
-                default: return "Invalid argument.";
-            }
-        }
+			httpListener = HttpServer.ListenAsync(
+				Convert.ToInt32(Config.AppSettings.Settings["port"].Value),
+				cancelToken.Token,
+				Route.OnHttpRequestAsync
+			);
+		}
 
-        // Auto generated methods
+		private void Form1_Load(object sender, EventArgs e) {
+			SetConfiguration();
+			MaximizeBox = false;
+			SendUpdateNotif(AppVersion);
+			createRoutes();
+		}
 
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            Hide();
-        }
+		private void PortKeypress(object sender, KeyPressEventArgs e) {
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+				e.Handled = true;
+		}
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
+		// change save file location button
+		private void ChangeSaveLocation_Click(object sender, EventArgs e) {
+			using (var fbd = new FolderBrowserDialog()) {
+				DialogResult result = fbd.ShowDialog();
+				if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath)) SaveLocationLabel.Text = fbd.SelectedPath;
+			}
+		}
 
-        private void toolStripMenuItem1_CheckedChanged(object sender, EventArgs e)
-        {
-            Config.AppSettings.Settings["checkNewRelease"].Value = Convert.ToString(contextUpdateCheck.Checked);
-            UpdateAppConfig();
-        }
+		private void Form1_Resize(object sender, EventArgs e) {
+			if (WindowState == FormWindowState.Minimized) Hide();
+		}
 
-        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
-                e.KeyChar != '.')
-            {
-                e.Handled = true;
-            }
-        }
+		private void trayIcon_MouseClick(object sender, MouseEventArgs e) {
+			if (e.Button != MouseButtons.Left) return;
 
-        private void Form1_Resize(object sender, EventArgs e)
-        {
-            if (WindowState == FormWindowState.Minimized)
-            {
-                Hide();
-            }
-        }
+			if (WindowState != FormWindowState.Normal) {
+				Show();
+				UpdateMenus();
+				WindowState = FormWindowState.Normal;
+			} else {
+				Hide();
+				WindowState = FormWindowState.Minimized;
+			}
+		}
 
-        private void trayIcon_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                Show();
-                WindowState = FormWindowState.Normal;
-            }
-        }
+		private void SaveSettingsButton_Click(object sender, EventArgs e) => SaveSettings();
 
-        private void SubmitNewSettings_Click(object sender, EventArgs e)
-        {
-            Config.AppSettings.Settings["port"].Value = PortInput.Text;
-            Config.AppSettings.Settings["password"].Value = PasswordInput.Text;
-            Config.AppSettings.Settings["checkNewRelease"].Value = Convert.ToString(UpdateCheckBox.Checked);
-            Config.AppSettings.Settings["passwordEnabled"].Value = Convert.ToString(EnablePasswordBox.Checked);
-            UpdateAppConfig();
-            MessageBox.Show(
-                "Saved settings. Changing certain settings such as your port and password may need you to restart your app to take effect.");
-            Hide();
-        }
+		// hide form on load
+		private void Form1_Shown(object sender, EventArgs e) => Hide();
 
-        private void EditSaveFileLocation_Click(object sender, EventArgs e)
-        {
-            using (var fbd = new FolderBrowserDialog())
-            {
-                DialogResult result = fbd.ShowDialog();
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    Config.AppSettings.Settings["currentSavePath"].Value = fbd.SelectedPath;
-                }
+		// open settings when context menu item clicked
+		private void OpenSettings_Click(object sender, EventArgs e) => Show();
 
-                UpdateAppConfig();
-            }
-        }
+		// right click context menu manual update check
+		private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e) => SendUpdateNotif(AppVersion, true);
 
-        private void OpenSettings_Click(object sender, EventArgs e)
-        {
-            Show();
-        }
-    }
+		// exit app when context menu item clicked
+		private void exitToolStripMenuItem_Click(object sender, EventArgs e) => Application.Exit();
+	}
 }
