@@ -33,9 +33,10 @@ namespace Phonelink {
 			settings["currentSavePath"].Value = SaveLocationLabel.Text;
 
 			UpdateConfigFile();
-			MessageBox.Show("Your settings will be applied when Phonelink is reopened. The file saving location will update now.",
+			MessageBox.Show("Your settings have been applied. If you have changed your port, remember to run the powershell script.",
 				"Settings Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			Hide();
+			createRoutes();
 		}
 	}
 }

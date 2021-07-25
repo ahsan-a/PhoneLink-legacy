@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace Phonelink {
 
 	public partial class Form1 : Form {
-		private static readonly string AppVersion = "1.4.1";
+		private static readonly string AppVersion = "2.0.0";
 
 		private static Configuration Config;
 		public KeyValueConfigurationCollection settings;
@@ -23,6 +23,8 @@ namespace Phonelink {
 				{"passwordEnabled", "true" },
 				{"currentSavePath", "savedFiles" }
 			};
+		private CancellationTokenSource cancelToken = new CancellationTokenSource();
+		private System.Threading.Tasks.Task httpListener;
 
 		public Form1() => InitializeComponent();
 
@@ -54,10 +56,16 @@ namespace Phonelink {
 			return true;
 		}
 
-		private void Form1_Load(object sender, EventArgs e) {
-			SetConfiguration();
-			MaximizeBox = false;
-			SendUpdateNotif(AppVersion);
+		private void createRoutes() {
+			cancelToken.Cancel();
+			try {
+				cancelToken.Token.ThrowIfCancellationRequested();
+			}
+			catch { }
+			try {
+				httpListener?.Dispose();
+			}
+			catch { }
 
 			Route.Add("/", (req, res, args) => res.AsText("Phonelink is running on this computer."));
 
@@ -98,11 +106,20 @@ namespace Phonelink {
 				else res.AsText(HandlePower(args["state"]));
 			});
 
-			HttpServer.ListenAsync(
+			cancelToken = new CancellationTokenSource();
+
+			httpListener = HttpServer.ListenAsync(
 				Convert.ToInt32(Config.AppSettings.Settings["port"].Value),
-				CancellationToken.None,
+				cancelToken.Token,
 				Route.OnHttpRequestAsync
 			);
+		}
+
+		private void Form1_Load(object sender, EventArgs e) {
+			SetConfiguration();
+			MaximizeBox = false;
+			SendUpdateNotif(AppVersion);
+			createRoutes();
 		}
 
 		private void PortKeypress(object sender, KeyPressEventArgs e) {
