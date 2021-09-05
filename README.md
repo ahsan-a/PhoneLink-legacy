@@ -19,7 +19,7 @@ When you share a link, an option should show in your share sheet called "Open li
 
 When you share a file or image, an option in your share sheet should show called "Save File on Computer". Once clicked, the file should save wherever you specified.
 
-You can also useThe Phonelink extension to control power state and send notifcations.
+You can also use the Phonelink extension to control power state and send notifcations.
 
 Requests look like this: `http://IP:PORT/TYPE`
 
@@ -29,12 +29,13 @@ Requests look like this: `http://IP:PORT/TYPE`
 #### Requests:
 |Request Type | Request Format | Request Example | Request Description |
 |--|--|--|--|
-| URL | `[IP]:[PORT]/url/[URL]` | `192.168.0.2:1234/1234/url/google.co.uk` | A GET request to send a link to your computer. It doesn't need to begin with `http://` or `https://`.|
-| File |`[IP]:[PORT]/file`|`192.168.0.2:1234/1234/file`| POST request to save files on your computer. Your file(s) inside of a form-data body. The key can be anything and the value must be your file(s). You can have multiple of these. The save location is whatever specified inside of your settings.|
-|Notification|`[IP]:[PORT]/notification`| `192.168.0.2:1234/1234/notification` |A GET request to send a notification to your computer. Your content must be in the form of headers. Your headers are `title`, and `body`. |
-|Power|`[IP]:[PORT]/power/[TYPE]`|`192.168.0.2:1234/1234/power/shutdown`|A GET request to control your computer's power state. your `[TYPE]` must be either: `shutdown`, `restart`, `logout`, or `lock`.|
+| URL | `[IP]:[PORT]/url/[URL]` | `192.168.0.2:1234/url/google.co.uk` | A GET request to send a link to your computer. It doesn't need to begin with `http://` or `https://`.|
+| File |`[IP]:[PORT]/file`|`192.168.0.2:1234/file`| POST request to save files on your computer. Your file(s) inside of a form-data body. The key can be anything and the value must be your file(s). You can have multiple of these. The save location is whatever specified inside of your settings.|
+|Notification|`[IP]:[PORT]/notification`| `192.168.0.2:1234/notification` |A GET request to send a notification to your computer. Your content must be in the form of headers. Your headers are `title`, and `body`. |
+|Power|`[IP]:[PORT]/power/[TYPE]`|`192.168.0.2:1234/power/shutdown`|A GET request to control your computer's power state. your `[TYPE]` must be either: `shutdown`, `restart`, `logout`, or `lock`.|
 
-The password is optional.
+
+password is optional.
 
 ### Configuration
 Click the tray icon for settings, or right click for more options.
