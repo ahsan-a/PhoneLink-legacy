@@ -1,4 +1,6 @@
-# PhoneLink
+# PhoneLink [Deprecated]
+
+## While this still works, updates will be for [phonelink-rs](https://github.com/ahsan-a/phonelink-rs) instead.
 
 Link your iPhone to your computer via HTTP requests.
 
